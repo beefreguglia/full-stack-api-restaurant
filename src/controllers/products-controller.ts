@@ -49,7 +49,7 @@ class ProductController {
 
       const { name, price } = bodySchema.parse(request.body);
 
-      const product = await knex<ProductRepository>("product")
+      const product = await knex<ProductRepository>("products")
         .select()
         .where({ id })
         .first();
@@ -76,7 +76,7 @@ class ProductController {
         .refine((value) => !isNaN(value), { message: "id must be a number."})
         .parse(request.params.id);
       
-      const product = await knex<ProductRepository>("product")
+      const product = await knex<ProductRepository>("products")
         .select()
         .where({ id })
         .first();
