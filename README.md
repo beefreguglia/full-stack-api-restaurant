@@ -10,6 +10,7 @@
 - Tsx
 - Sqlite3
 - Knex
+- Zod
 
 ## Features
 
