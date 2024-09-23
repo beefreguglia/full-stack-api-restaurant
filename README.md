@@ -7,7 +7,9 @@
 - Node.Js
 - Typescript
 - Express
-- tsx
+- Tsx
+- Sqlite3
+- Knex
 
 ## Features
 
