@@ -23,11 +23,11 @@ class TableSessionsController {
       });
 
       const { table_id } = bodySchema.parse(request.body);
-
+      
       const session = await knex<TableSessionsRepository>("tables_sessions")
-        .where({ table_id })
-        .orderBy("opened_at", "desc")
-        .first();
+      .where({ table_id })
+      .orderBy("opened_at", "desc")
+      .first();
 
       if (session && !session.closed_at) {
         throw new AppError("This table is already open");
