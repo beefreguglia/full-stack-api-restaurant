@@ -35,7 +35,7 @@
 
 - [x] Deve ser possível visualizar todos os pedidos de uma sessão específica;
 - [x] Deve ser possível criar um novo pedido;
-- [ ] Deve ser possível visualizar o resumo pedido;
+- [x] Deve ser possível visualizar o resumo pedido;
 
 ## RBAC
 
