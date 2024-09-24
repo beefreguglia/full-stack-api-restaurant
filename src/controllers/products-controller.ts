@@ -7,11 +7,14 @@ import { AppError } from '@/utils/AppError';
 class ProductController {
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      const { name } = request.query
+      const { name } = request.query;
 
-      const products = await knex<ProductRepository>("products").select().whereLike("name", `%${name ?? ""}%`).orderBy("name")
+      const products = await knex<ProductRepository>("products")
+        .select()
+        .whereLike("name", `%${name ?? ""}%`)
+        .orderBy("name");
       
-      return response.json(products)
+      return response.json(products);
     } catch (error) {
       next(error);
     }
