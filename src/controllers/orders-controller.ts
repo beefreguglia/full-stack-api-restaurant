@@ -4,6 +4,43 @@ import { Request, Response, NextFunction} from 'express';
 import { z } from 'zod';
 
 class OrdersController {
+  async index(request: Request, response: Response, next: NextFunction) {
+    try {
+      const table_session_id = z.string()
+        .transform((value) => Number(value))
+        .refine((value) => !isNaN(value), { message: "id must be a number."})
+        .parse(request.params.table_session_id);
+
+      const session = await knex<TableSessionsRepository>("tables_sessions")
+        .where({ id: table_session_id })
+        .first();
+
+      if(!session) {
+        throw new AppError("Session not found.");
+      }
+
+      const orders = await knex<OrderRepository>("orders")
+        .select(
+          "orders.id", 
+          "orders.table_session_id", 
+          "orders.product_id",
+          "orders.price",
+          "orders.quantity",
+          "orders.created_at",
+          "orders.updated_at",
+          knex.raw("(orders.price * orders.quantity) AS total"),
+          "products.name"
+        )
+        .join("products", "products.id", "orders.product_id")
+        .where({ table_session_id })
+        .orderBy("orders.created_at", "desc");
+
+      return response.json(orders);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async create(request: Request, response: Response, next: NextFunction) {
     try {
       const bodySchema = z.object({
