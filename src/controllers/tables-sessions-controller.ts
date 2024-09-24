@@ -5,6 +5,17 @@ import { knex } from '@/database/knex';
 import { AppError } from '@/utils/AppError';
 
 class TableSessionsController {
+  async index(request: Request, response: Response, next: NextFunction) {
+    try {
+      const sessions = await knex<TableSessionsRepository>("tables_sessions")
+        .orderBy("closed_at")
+
+      return response.json(sessions);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   async create(request: Request, response: Response, next: NextFunction) {
     try {
       const bodySchema = z.object({
@@ -22,7 +33,6 @@ class TableSessionsController {
         throw new AppError("This table is already open");
       }
 
-      
       await knex<TableSessionsRepository>("tables_sessions")
         .insert({ table_id });
       
