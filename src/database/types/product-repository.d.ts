@@ -1,7 +1,7 @@
 type ProductRepository = {
-  id: number
-  name: string
-  price: number
-  created_at: string
-  updated_at: string
+  id: number,
+  name: string,
+  price: number,
+  created_at: number,
+  updated_at: number,
 }
