@@ -85,6 +85,34 @@ class OrdersController {
       next(error);
     }
   }
+
+  async show(request: Request, response: Response, next: NextFunction) {
+    try {
+      const table_session_id = z.string()
+        .transform((value) => Number(value))
+        .refine((value) => !isNaN(value), { message: "id must be a number."})
+        .parse(request.params.table_session_id);
+
+      const session = await knex<TableSessionsRepository>("tables_sessions")
+        .where({ id: table_session_id })
+        .first();
+
+      if(!session) {
+        throw new AppError("Session not found.");
+      }
+
+      const order = await knex<OrderRepository>("orders")
+        .select(
+          knex.raw("(SUM(orders.price * orders.quantity)) AS total"),
+        )
+        .where({ table_session_id })
+        .first();
+
+      return response.json(order);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export { OrdersController }
